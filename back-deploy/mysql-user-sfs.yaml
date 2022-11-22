@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mysql-survey
+  name: mysql-user
 spec:
   selector:
     matchLabels:
-      app: mysql-survey
-  serviceName: mysql-survey
+      app: mysql-user
+  serviceName: mysql-user-service
   replicas: 2
   template:
     metadata:
       labels:
-        app: mysql-survey
+        app: mysql-user
     spec:
       initContainers:
-      - name: init-mysql-survey
+      - name: init-mysql-user
         image: mysql:8.0.28
         command:
         - bash
@@ -42,7 +42,7 @@ spec:
           mountPath: /mnt/conf-2
         - name: config-map
           mountPath: /mnt/config-map
-      - name: clone-mysql-survey
+      - name: clone-mysql-user
         image: hiroaki2020/dtuj_xtrabackup:1.0
         securityContext:
           runAsUser: 0
@@ -65,13 +65,13 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
-          subPath: mysql-survey
+          subPath: mysql-user
         - name: conf
           mountPath: /etc/mysql/conf.d
         - name: conf-2
           mountPath: /etc/mysql
       containers:
-      - name: mysql-survey
+      - name: mysql-user
         image: mysql:8.0.28
         resources:
           limits:
@@ -84,12 +84,12 @@ spec:
         - name: MYSQL_ALLOW_EMPTY_PASSWORD
           value: "1"
         ports:
-        - name: mysql-survey
+        - name: mysql-user
           containerPort: 3306
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
-          subPath: mysql-survey
+          subPath: mysql-user
         - name: conf
           mountPath: /etc/mysql/conf.d
         livenessProbe:
@@ -158,7 +158,7 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
-          subPath: mysql-survey
+          subPath: mysql-user
         - name: conf
           mountPath: /etc/mysql/conf.d
         - name: conf-2
@@ -177,7 +177,7 @@ spec:
         emptyDir: {}
       - name: config-map
         configMap:
-          name: mysql-survey
+          name: mysql-user
   volumeClaimTemplates:
   - metadata:
       name: data
