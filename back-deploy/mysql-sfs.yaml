@@ -6,12 +6,14 @@ spec:
   selector:
     matchLabels:
       app: mysql
+      app.kubernetes.io/name: mysql
   serviceName: mysql
   replicas: 2
   template:
     metadata:
       labels:
         app: mysql
+        app.kubernetes.io/name: mysql
     spec:
       initContainers:
       - name: init-mysql
@@ -177,7 +179,7 @@ spec:
         emptyDir: {}
       - name: config-map
         configMap:
-          name: mysql  
+          name: mysql
   volumeClaimTemplates:
   - metadata:
       name: data
