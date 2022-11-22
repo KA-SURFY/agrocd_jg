@@ -9,6 +9,18 @@ data:
   my.cnf: |
     [mysqld]
     !includedir /etc/mysql/conf.d/
+    log-bin=mysql-bin
+    max_binlog_size=1G
+    expire_logs_days=30
+    
+  initdb.sql: |
+    SET GLOBAL binlog_format = 'ROW';
+    SET GLOBAL server_id = 184054;
+    CREATE DATABASE test;
+    use test;
+    CREATE TABLE example (id INT(16) NOT NULL, name VARCHAR(32));
+    INSERT INTO example VALUES (123, 'tmax');
+
   primary.cnf: |
     # Apply this config only on the primary.
     [mysqld]
