@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: user
-  serviceName: user-service
+  serviceName: user
   replicas: 2
   template:
     metadata:
