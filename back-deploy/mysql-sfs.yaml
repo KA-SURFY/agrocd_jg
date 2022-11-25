@@ -7,7 +7,7 @@ spec:
     matchLabels:
       app: mysql
       app.kubernetes.io/name: mysql
-  serviceName: mysql-service
+  serviceName: mysql
   replicas: 2
   template:
     metadata:
