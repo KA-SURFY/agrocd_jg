@@ -1,0 +1,35 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: essay-sink-connector
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: kafka-connect-cluster3
+spec:
+  class: io.confluent.connect.jdbc.JdbcSinkConnector
+  tasksMax: 1
+  config:
+    topics: respondent.respondent.essay
+    connection.url: "jdbc:mysql://mysql.jeonggyu-namespace.svc.cluster.local:3306/integration"
+    connection.user: "root"
+    connection.password: ""
+    auto.create: false
+    auto.evolve: false
+    insert.mode: "upsert"
+    pk.mode: "record_key"
+    pk.fields: essay_id
+    tombstones.on.delete: "true"
+    delete.enabled: "true"
+    # pk.mode: "record_key"
+    # topics.regex: dbserver1.member.(.*)
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: true
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: true
+
+    transforms: unwrap, route
+    transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
+    transforms.unwrap.drop.tombstones: false
+    transforms.route.type: org.apache.kafka.connect.transforms.RegexRouter
+    transforms.route.regex: "([^.]+)\\.([^.]+)\\.([^.]+)"
+    transforms.route.replacement: $3
