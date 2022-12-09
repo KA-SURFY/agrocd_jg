@@ -17,7 +17,7 @@ spec:
         app: sa-project
     spec:
       containers:
-      - image: sosqre0105/sa-project:21
+      - image: sosqre0105/sa-project:22
         name: sa-project
         ports:
         - containerPort: 8080
